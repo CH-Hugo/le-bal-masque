@@ -5,6 +5,7 @@ export function createPlayer() {
     this.player.body.setCollideWorldBounds(true);
     this.cursors = this.input.keyboard.createCursorKeys();
     this.player.isDashing = false;
+    this.canDash = true;
     this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
 }
 
@@ -28,7 +29,6 @@ export function movePlayer() {
     }
 
     const isJumpJustPressed = Phaser.Input.Keyboard.JustDown(this.cursors.up);
-
     if (isJumpJustPressed) {
         if (this.player.body.onFloor()) {
             this.player.body.setVelocityY(-450);
@@ -40,16 +40,25 @@ export function movePlayer() {
         }
     }
 
-    if (Phaser.Input.Keyboard.JustDown(this.keyQ)) {
+    if (Phaser.Input.Keyboard.JustDown(this.keyQ) && this.canDash) {
         this.player.isDashing = true;
+        this.canDash = false;
 
-        this.player.body.setVelocityX(-1000);
+        this.player.body.setVelocityX(-600);
 
         this.time.addEvent({
             delay: 200,
             callback: () => {
                 this.player.isDashing = false;
                 this.player.body.setVelocityX(0);
+            },
+            callbackScope: this
+        });
+
+        this.time.addEvent({
+            delay: 2500,
+            callback: () => {
+                this.canDash = true;
             },
             callbackScope: this
         });
