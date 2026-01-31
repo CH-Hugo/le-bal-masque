@@ -14,6 +14,7 @@ export function createPlayer() {
     this.player.maxHealth = 5;
     this.hearts = this.add.group();
     actualisercoeur.call(this);
+
 }
 
 export function movePlayer() {
@@ -100,4 +101,7 @@ function actualisercoeur() {
 
         this.hearts.add(heart);
     }
+
+    if
+
 }
