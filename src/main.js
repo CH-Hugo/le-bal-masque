@@ -1,6 +1,7 @@
 import { movePlayer, createPlayer } from './player1.js';
 import { createBoss, moveBoss, jumpBoss } from './ennemis/boss.js';
 import { createLevel } from './level.js';
+import {setupCamera} from'./camera.js';
 
 const config = {
     type: Phaser.AUTO,
@@ -26,7 +27,8 @@ function preload() {
 }
 
 function create() {
-    const sol = createLevel.call(this);
+    const { map, sol } = createLevel.call(this); 
+
     createPlayer.call(this);
     createBoss.call(this);
 
@@ -36,6 +38,8 @@ function create() {
     if (this.boss && sol) {
         this.physics.add.collider(this.boss, sol);
     }
+
+    setupCamera.call(this, map); 
 
     this.jumpBoss = jumpBoss.bind(this);
 }
