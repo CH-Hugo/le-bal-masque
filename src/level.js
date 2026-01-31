@@ -5,9 +5,7 @@ export function createLevel() {
     const sol = map.createLayer('Calque de Tuiles 1', [tilesetFond, tilesetPlateforme], 0, 0);
 
     if (sol) {
-        sol.setDisplaySize(this.sys.game.config.width, this.sys.game.config.height);
         sol.setCollisionByProperty({ collides: true });
     }
-
-    return sol;
+    return { map, sol }; 
 }
