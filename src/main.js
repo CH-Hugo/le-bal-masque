@@ -1,6 +1,7 @@
 import { movePlayer } from './player1.js';
 import { createPlayer } from './player1.js';
 import { createBoss } from './ennemis/boss.js';
+import { jumpBoss } from './ennemis/boss.js';
 import { moveBoss } from './ennemis/boss.js';
 
 
@@ -32,28 +33,30 @@ new Phaser.Game(config);
 function preload() {
     this.load.tilemapTiledJSON('maMap', 'assets/map.json'); 
     this.load.image('mesTuiles', 'assets/fond.jpg'); 
+    this.load.image('texturePlateforme', 'assets/pixels.jpg'); 
 }
 
 function create() {
     const map = this.make.tilemap({ key: 'maMap' });
-    
-    const tileset = map.addTilesetImage('fond', 'mesTuiles');
 
-    const sol = map.createLayer('Calque de Tuiles 1', tileset, 0, 0);
+    const tilesetFond = map.addTilesetImage('fond', 'mesTuiles');
+    const tilesetPlateforme = map.addTilesetImage('pixels', 'texturePlateforme');
+    const sol = map.createLayer('Calque de Tuiles 1', [tilesetFond, tilesetPlateforme], 0, 0);
 
     if (sol) {
-        sol.setDisplaySize(window.innerWidth, window.innerHeight);
+        sol.setDisplaySize(this.sys.game.config.width, this.sys.game.config.height);
         sol.setCollisionByProperty({ collides: true });
     }
 
     createPlayer.call(this);
-
-    if (this.player && sol) {
-        this.physics.add.collider(this.player, sol);
-    }
-
     createBoss.call(this);
+
+    this.physics.add.collider(this.player, sol);
+    this.physics.add.collider(this.boss, sol);
+
+    this.jumpBoss = jumpBoss.bind(this);
 }
+
 function update() {
     movePlayer.call(this);
     moveBoss.call(this);
