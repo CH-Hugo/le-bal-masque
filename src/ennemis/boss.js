@@ -7,13 +7,7 @@ export function createBoss() {
 
     this.bossJumpCount = 0;
 
-    this.time.addEvent({
-        delay:1500,
-        callback: () => {
-            this.jumpBoss();
-        },
-        loop: true
-    });
+    this.bossDetectionRadius = 300; //zone de détection, distance en pixels
 }
 
 export function moveBoss () {
@@ -30,5 +24,30 @@ export function jumpBoss(){
     if (this.bossJumpCount < 2){
         this.boss.setVelocityY(-400);
         this.bossJumpCount++;
+    }
+}
+
+export function attackBoss(){
+    if (!this.player) return; //vérifie que le joueur existe
+
+    const direction = this.player.x < this.boss.x ? -1 : 1; //calcule de la direction vers le joueur
+    
+    this.boss.setVelocityX(direction*500); //donner une grosse vitesse pour simuler une attaque
+    
+    if (this.boss.body.onFloor()) {
+        this.boss.setVelocityY(-150);
+    }
+
+}
+
+export function detectPlayer(){
+    if (!this.player || !this.boss) return;
+
+    const distance = Phaser.Math.Distance.Between(
+        this.boss.x, this.boss.y,
+        this.player.x, this.player.y
+    );
+    if (distance < this.bossDetectionRadius){
+        this.attackBoss();
     }
 }

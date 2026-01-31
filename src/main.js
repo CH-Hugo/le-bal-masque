@@ -3,6 +3,8 @@ import { createPlayer } from './player1.js';
 import { createBoss } from './ennemis/boss.js';
 import { jumpBoss } from './ennemis/boss.js';
 import { moveBoss } from './ennemis/boss.js';
+import { attackBoss } from './ennemis/boss.js';
+import { detectPlayer } from './ennemis/boss.js';
 
 
 const config = {
@@ -53,12 +55,25 @@ function create() {
     }
 
     createBoss.call(this);
+    if (this.boss &&sol){
+      this.physics.add.collider(this.boss, sol);
+    }
     this.jumpBoss = jumpBoss.bind(this);
+    this.attackBoss = attackBoss.bind(this);
+    this.detectPlayer = detectPlayer.bind(this);
+
+    //Timer pour les sauts
+    this.time.addEvent({
+        delay:1500, //toutes les 1.5 secondes
+        callback: () => {
+            this.jumpBoss();
+        },
+        loop: true
+    });
 }
 function update() {
     movePlayer.call(this);
- 
-}
-
     moveBoss.call(this);
+    this.detectPlayer
   // ici tout ce qui va se jouer a chaque frame
+}
