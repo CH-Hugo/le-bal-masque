@@ -101,7 +101,4 @@ function actualisercoeur() {
 
         this.hearts.add(heart);
     }
-
-    if
-
 }
