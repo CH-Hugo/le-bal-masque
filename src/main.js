@@ -1,5 +1,5 @@
-import { mooveplayer } from './mooveplayer.js';
-import { createplayer } from './mooveplayer.js';
+import { mooveplayer } from './player1.js';
+import { createplayer } from './player1.js';
 
 const config = {
   type: Phaser.AUTO,
