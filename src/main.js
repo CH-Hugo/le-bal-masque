@@ -1,6 +1,8 @@
-// import { createboss } from './boss.js';
 import { movePlayer } from './player1.js';
 import { createPlayer } from './player1.js';
+import { createBoss } from './ennemis/boss.js';
+import { moveBoss } from './ennemis/boss.js';
+
 
 const config = {
   type: Phaser.AUTO,
@@ -48,8 +50,13 @@ function create() {
     if (this.player && sol) {
         this.physics.add.collider(this.player, sol);
     }
-}
 
+    createBoss.call(this);
+}
 function update() {
     movePlayer.call(this);
+ 
 }
+
+    moveBoss.call(this);
+  // ici tout ce qui va se jouer a chaque frame
