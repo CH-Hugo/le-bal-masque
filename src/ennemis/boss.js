@@ -5,7 +5,7 @@ export function createBoss() {
     this.boss.setVelocityX(this.bossSpeed); //vitesse initiale vers la droite 
 }
 
-export function moovBoss () {
+export function moveBoss () {
     if (this.boss.body.blocked.left || this.boss.body.blocked.right){
         this.bossSpeed *= -1;
         this.boss.setVelocityX(this.bossSpeed);

@@ -1,7 +1,7 @@
 import { movePlayer } from './player1.js';
 import { createPlayer } from './player1.js';
-import { createBoss } from './boss.js';
-import { moovBoss } from './boss.js';
+import { createBoss } from './ennemis/boss.js';
+import { moveBoss } from './ennemis/boss.js';
 
 
 const config = {
@@ -40,6 +40,6 @@ function create() {
 
 function update() {
     movePlayer.call(this);
-    moovBoss.call(this);
+    moveBoss.call(this);
   // ici tout ce qui va se jouer a chaque frame
 }
