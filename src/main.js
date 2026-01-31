@@ -55,8 +55,5 @@ function create() {
 }
 function update() {
     movePlayer.call(this);
- 
+        moveBoss.call(this);
 }
-
-    moveBoss.call(this);
-  // ici tout ce qui va se jouer a chaque frame
