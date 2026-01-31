@@ -1,4 +1,5 @@
 import { mooveplayer } from './mooveplayer.js';
+import { createplayer } from './mooveplayer.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -30,12 +31,7 @@ function preload() {
 }
 
 function create() {
-        this.player = this.add.rectangle(100, 100, 50, 50, 0x00ff00);
-        this.player.y = window.innerHeight / 2;
-        this.player.x = window.innerWidth / 2;
-        this.physics.add.existing(this.player);
-
-        this.cursors = this.input.keyboard.createCursorKeys();
+    createplayer.call(this);
   // la nos objets genre joueur, collisions etc...
 }
 
