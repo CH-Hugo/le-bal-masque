@@ -1,5 +1,6 @@
-import { movePlayer, createplayer } from './player1.js';
-import { createboss } from './boss.js';
+// import { createboss } from './boss.js';
+import { movePlayer } from './player1.js';
+import { createPlayer } from './player1.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -31,9 +32,8 @@ function preload() {
 }
 
 function create() {
-    createplayer.call(this);
-    createboss.call(this);
     createPlayer.call(this);
+  //  createboss.call(this);
   // la nos objets genre joueur, collisions etc...
 }
 

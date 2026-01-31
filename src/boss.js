@@ -1,4 +1,4 @@
-export function createboss() {
+/*export function createboss() {
     this.boss = this.physics.add.sprite(300, 200, 'boss');
     this.boss.setCollideWorldBounds(true);
     this.bossSpeed = 150; //rebondit sur les bords
@@ -8,3 +8,4 @@ export function createboss() {
 export function moovboss () {
     this.boss = this.physics.add.sprite
 }
+    */
