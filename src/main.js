@@ -31,34 +31,35 @@ const config = {
 new Phaser.Game(config);
 
 function preload() {
-    this.load.tilemapTiledJSON('maMap', '/assets/map.json');
-    this.load.image('mesTuiles', '/assets/fond.jpg');
+    this.load.tilemapTiledJSON('maMap', 'assets/map.json');
+    this.load.image('mesTuiles', 'assets/fond.jpg');
+    this.load.image('texturePlateforme', 'assets/pixels.jpg');
 }
 
 function create() {
     const map = this.make.tilemap({ key: 'maMap' });
 
-    const tileset = map.addTilesetImage('fond', 'mesTuiles');
-
-    const sol = map.createLayer('Calque de Tuiles 1', tileset, 0, 0);
+    const tilesetFond = map.addTilesetImage('fond', 'mesTuiles');
+    const tilesetPlateforme = map.addTilesetImage('pixels', 'texturePlateforme');
+    const sol = map.createLayer('Calque de Tuiles 1', [tilesetFond, tilesetPlateforme], 0, 0);
 
     if (sol) {
+        sol.setDisplaySize(this.sys.game.config.width, this.sys.game.config.height);
         sol.setCollisionByProperty({ collides: true });
     }
 
     createPlayer.call(this);
+    createBoss.call(this);
 
-    if (this.player && sol) {
-        this.physics.add.collider(this.player, sol);
-    }
+    this.physics.add.collider(this.player, sol);
+    this.physics.add.collider(this.boss, sol);
 
     let isDashing = true;
 
-    createBoss.call(this);
     this.jumpBoss = jumpBoss.bind(this);
 }
+
 function update() {
     movePlayer.call(this);
     moveBoss.call(this);
-    // ici tout ce qui va se jouer a chaque frame
 }
