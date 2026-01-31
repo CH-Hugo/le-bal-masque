@@ -11,10 +11,13 @@ export function createPlayer() {
 export function movePlayer() {
     if (!this.player || !this.player.body) return;
 
-    switch (this.cursors) {
-        case (this.cursors.left.isDown): this.player.body.setVelocityX(-300); return;
-        case (this.cursors.right.isDown): this.player.body.setVelocityX(300); return;
-        case (this.cursors.up.isDown): this.player.body.setVelocityY(200); return;
-        default: this.player.body.setVelocity(0);
+    if (this.cursors.left.isDown) {
+        this.player.body.setVelocityX(-300);
+    } else if (this.cursors.right.isDown) {
+        this.player.body.setVelocityX(300);
+    } else if (this.cursors.up.isDown) {
+        this.player.body.setVelocityY(-200);
+    } else {
+        this.player.body.setVelocity(0);
     }
 }
