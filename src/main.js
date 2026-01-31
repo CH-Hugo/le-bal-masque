@@ -1,7 +1,8 @@
 import { movePlayer } from './player1.js';
 import { createPlayer } from './player1.js';
-import { createBoss } from './boss.js';
-import { moovBoss } from './boss.js';
+import { createBoss } from './ennemis/boss.js';
+import { moovBoss } from './ennemis/boss.js';
+import { jumpBoss } from './ennemis/boss.js';
 
 
 const config = {
@@ -36,6 +37,7 @@ function preload() {
 function create() {
     createPlayer.call(this);
     createBoss.call(this);
+    this.jumpBoss = jumpBoss.bind(this);
 }
 
 function update() {
