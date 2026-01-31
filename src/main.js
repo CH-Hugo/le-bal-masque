@@ -1,4 +1,5 @@
-import { mooveplayer, createplayer } from './player1.js';
+import { movePlayer, createplayer } from './player1.js';
+import { createboss } from './boss.js';
 
 const config = {
   type: Phaser.AUTO,
@@ -31,10 +32,12 @@ function preload() {
 
 function create() {
     createplayer.call(this);
+    createboss.call(this);
+    createPlayer.call(this);
   // la nos objets genre joueur, collisions etc...
 }
 
 function update() {
-    mooveplayer.call(this);
+    movePlayer.call(this);
   // ici tout ce qui va se jouer a chaque frame
 }
