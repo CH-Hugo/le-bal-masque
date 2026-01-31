@@ -33,6 +33,8 @@ function preload() {
 
 function create() {
     createPlayer.call(this);
+
+    this.jumpCount = 0;
   //  createboss.call(this);
   // la nos objets genre joueur, collisions etc...
 }
