@@ -1,55 +1,65 @@
 export function createBoss() {
     this.boss = this.physics.add.sprite(300, 200, 'boss');
     this.boss.setCollideWorldBounds(true);
-    this.bossSpeed = 150; //rebondit sur les bords, on stocke la vitesse
-    this.boss.setVelocityX(this.bossSpeed); //vitesse initiale vers la droite
+    this.bossSpeed = 150;
+    this.boss.setVelocityX(this.bossSpeed);
 
     this.bossJumpCount = 0;
-
-    this.bossDetectionRadius = 300; //zone de détection, distance en pixels
-
+    this.bossDetectionRadius = 300;
     this.bossIsAttacking = false;
+    
+    // Essentiel pour la fusion : permet de ne prendre qu'un dégât par charge
+    this.bossHasHit = false; 
 }
 
-export function moveBoss () {
-    if (this.boss.body.blocked.left || this.boss.body.blocked.right){
+export function moveBoss() {
+    if (!this.boss || !this.boss.body || this.bossIsAttacking) return;
+
+    // Patrouille simple : change de direction si touche un mur
+    if (this.boss.body.blocked.left || this.boss.body.blocked.right) {
         this.bossSpeed *= -1;
         this.boss.setVelocityX(this.bossSpeed);
     }
 }
 
-export function jumpBoss(){
-    if (this.boss.body.onFloor()){
+export function jumpBoss() {
+    if (!this.boss || !this.boss.body) return;
+    
+    if (this.boss.body.onFloor()) {
         this.bossJumpCount = 0;
     }
-    if (this.bossJumpCount < 2){
+
+    if (this.bossJumpCount < 2) {
         this.boss.setVelocityY(-400);
         this.bossJumpCount++;
     }
 }
 
-export function attackBoss(){
-    if (!this.player) return; //vérifie que le joueur existe
-    if (!this.bossIsAttacking) return;
+export function attackBoss() {
+    if (!this.player || !this.boss || !this.bossIsAttacking) return;
 
-    const direction = this.player.x < this.boss.x ? -1 : 1; //calcule de la direction vers le joueur
-    
-    this.boss.setVelocityX(direction*500); //donner une grosse vitesse pour simuler une attaque
-    
+    // Détermine la direction du joueur pour foncer dessus
+    const direction = this.player.x < this.boss.x ? -1 : 1;
+    this.boss.setVelocityX(direction * 500);
+
+    // Petit saut s'il est au sol pour rendre l'attaque plus dynamique
     if (this.boss.body.onFloor()) {
         this.boss.setVelocityY(-150);
     }
-
 }
 
-export function detectPlayer(){
+export function detectPlayer() {
     if (!this.player || !this.boss) return;
 
     const distance = Phaser.Math.Distance.Between(
-        this.boss.x, this.boss.y,
-        this.player.x, this.player.y
+        this.boss.x, 
+        this.boss.y, 
+        this.player.x, 
+        this.player.y
     );
-    if (distance < this.bossDetectionRadius && this.bossIsAttacking){
+
+    // Si le joueur est proche et que le timer de main.js a activé bossIsAttacking
+    if (distance < this.bossDetectionRadius && this.bossIsAttacking) {
         this.attackBoss();
     }
 }
