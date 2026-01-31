@@ -3,7 +3,7 @@ export function createplayer() {
         this.player.y = window.innerHeight / 2;
         this.player.x = window.innerWidth / 2;
         this.physics.add.existing(this.player);
-
+        this.player.body.setCollideWorldBounds(true);
         this.cursors = this.input.keyboard.createCursorKeys();
 }
 
@@ -11,7 +11,7 @@ export function createplayer() {
 export function mooveplayer() {
     if (!this.player || !this.player.body) return;
 
-    this.player.body.setVelocity(0);
+    this.player.body.setVelocityX(0);
 
     if (this.cursors.left.isDown) {
         this.player.body.setVelocityX(-300);
