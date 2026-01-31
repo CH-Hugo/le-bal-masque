@@ -79,20 +79,19 @@ export function movePlayer() {
         });
     }
 }
-
 function actualisercoeur() {
     this.hearts.clear(true, true);
     
-    const margin = 100;
-    const marginRight = 50;
+    const marginLeft = 150; 
+    const marginTop = 90;  
     const spacing = 40; 
-    const targetSize = 30;
+    const targetSize = 35;
+
     for (let i = 0; i < this.player.health; i++) {
-        let posX = this.cameras.main.width - margin - (i * spacing) - marginRight;
-        let posY = margin;        
+        let posX = marginLeft + (i * spacing);
+        let posY = marginTop; 
         
         let heart = this.add.image(posX, posY, 'coeur');
-        
         heart.setScrollFactor(0);
         
         let scale = targetSize / heart.width;
