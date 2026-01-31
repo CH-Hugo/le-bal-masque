@@ -28,16 +28,28 @@ const config = {
 new Phaser.Game(config);
 
 function preload() {
-  // ici mon mets nos assets img, sons, maps etc...
+    this.load.tilemapTiledJSON('maMap', 'assets/map.json'); 
+    this.load.image('mesTuiles', 'assets/fond.jpg'); 
 }
 
 function create() {
+    const map = this.make.tilemap({ key: 'maMap' });
+    
+    const tileset = map.addTilesetImage('fond', 'mesTuiles');
+
+    const sol = map.createLayer('Calque de Tuiles 1', tileset, 0, 0);
+
+    if (sol) {
+        sol.setCollisionByProperty({ collides: true });
+    }
+
     createPlayer.call(this);
-  //  createboss.call(this);
-  // la nos objets genre joueur, collisions etc...
+
+    if (this.player && sol) {
+        this.physics.add.collider(this.player, sol);
+    }
 }
 
 function update() {
     movePlayer.call(this);
-  // ici tout ce qui va se jouer a chaque frame
 }
