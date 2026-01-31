@@ -1,4 +1,4 @@
-// import { createboss } from './boss.js';
+// import { createboss } from './ennemis/boss.js';
 import { movePlayer } from './player1.js';
 import { createPlayer } from './player1.js';
 
