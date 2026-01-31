@@ -29,6 +29,7 @@ function preload() {
     this.load.tilemapTiledJSON('maMap', 'assets/map.json'); 
     this.load.image('mesTuiles', 'assets/fond.jpg'); 
     this.load.image('texturePlateforme', 'assets/pixels.jpg');
+    this.load.image('coeur', 'assets/coeur.png');
 }
 
 function create() {

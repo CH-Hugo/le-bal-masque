@@ -10,6 +10,10 @@ export function createPlayer() {
     this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
     this.sprintSpeed = 450;
     this.walkSpeed = 300;
+    this.player.health = 5;
+    this.player.maxHealth = 5;
+    this.hearts = this.add.group();
+    actualisercoeur.call(this);
 }
 
 export function movePlayer() {
@@ -73,5 +77,27 @@ export function movePlayer() {
             },
             callbackScope: this
         });
+    }
+}
+
+function actualisercoeur() {
+    this.hearts.clear(true, true);
+    
+    const margin = 100;
+    const marginRight = 50;
+    const spacing = 40; 
+    const targetSize = 30;
+    for (let i = 0; i < this.player.health; i++) {
+        let posX = this.cameras.main.width - margin - (i * spacing) - marginRight;
+        let posY = margin;        
+        
+        let heart = this.add.image(posX, posY, 'coeur');
+        
+        heart.setScrollFactor(0);
+        
+        let scale = targetSize / heart.width;
+        heart.setScale(scale);
+        
+        this.hearts.add(heart);
     }
 }
