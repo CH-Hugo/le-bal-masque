@@ -1,16 +1,6 @@
+// Nettoyage des imports : Une seule ligne par fichier suffit !
 import { movePlayer, createPlayer, handlePlayerDamage } from './player1.js';
 import { createBoss, jumpBoss, moveBoss, attackBoss, detectPlayer } from './ennemis/boss.js';
-import { createLevel } from './level.js';
-import { setupCamera } from './camera.js';
-import { movePlayer } from './player1.js';
-import { createPlayer } from './player1.js';
-import { createBoss } from './ennemis/boss.js';
-import { jumpBoss } from './ennemis/boss.js';
-import { moveBoss } from './ennemis/boss.js';
-import { attackBoss } from './ennemis/boss.js';
-import { detectPlayer } from './ennemis/boss.js';
-import { updateBossAttackZone } from './ennemis/boss.js';
-import { takeDamage } from './ennemis/boss.js';
 import { createLevel } from './level.js';
 import { setupCamera } from './camera.js';
 
@@ -26,7 +16,7 @@ const config = {
         default: 'arcade',
         arcade: { gravity: { y: 600 }, debug: false }
     },
-    render: { pixelArt: true }, // Indispensable pour tes nouveaux sprites
+    render: { pixelArt: true }, 
     scene: { preload, create, update }
 };
 
@@ -37,19 +27,15 @@ function preload() {
     this.load.image('mesTuiles', 'assets/fond.jpg'); 
     this.load.image('texturePlateforme', 'assets/pixels.jpg');
     this.load.image('coeur', 'assets/coeur.png');
-    
-    // Tes spritesheets avec les bons découpages
     this.load.spritesheet('perso_marche', 'assets/marche.png', { frameWidth: 30, frameHeight: 32 });
     this.load.spritesheet('perso', 'assets/perso.png', { frameWidth: 24, frameHeight: 30 });
-    
-    // N'oublie pas de charger l'image du boss si ce n'est pas déjà fait ailleurs
     this.load.image('boss', 'assets/boss.png'); 
 }
 
 function create() {
     const { map, sol } = createLevel.call(this); 
 
-    // --- 1. TES ANIMATIONS ---
+    // --- 1. ANIMATIONS ---
     this.anims.create({
         key: 'idle',
         frames: this.anims.generateFrameNumbers('perso', { start: 0, end: 2 }),
@@ -64,11 +50,11 @@ function create() {
         repeat: -1
     });
 
-    // --- 2. CRÉATION DES PERSONNAGES ---
+    // --- 2. CRÉATION ---
     createPlayer.call(this);
     createBoss.call(this);
 
-    // --- 3. COLLISIONS ET DÉGÂTS (Fusionné) ---
+    // --- 3. COLLISIONS ET DÉGÂTS ---
     if (this.player && sol) {
         this.physics.add.collider(this.player, sol);
     }
@@ -76,23 +62,17 @@ function create() {
         this.physics.add.collider(this.boss, sol);
     }
 
-    // Ajout de la détection des dégâts (Sa fonctionnalité)
+    // Gestion des dégâts
     this.physics.add.overlap(this.player, this.boss, handlePlayerDamage, null, this);
 
     setupCamera.call(this, map); 
 
-
-    createBoss.call(this);
-    if (this.boss &&sol){
-      this.physics.add.collider(this.boss, sol);
-    }
+    // Liaison des fonctions
     this.jumpBoss = jumpBoss.bind(this);
     this.attackBoss = attackBoss.bind(this);
     this.detectPlayer = detectPlayer.bind(this);
-    this.updateBossAttackZone = updateBossAttackZone.bind(this);
-    this.takeDamage = takeDamage.bind(this);
 
-    // --- 4. TIMERS (Fusionnés) ---
+    // --- 4. TIMERS ---
     this.time.addEvent({
         delay: 1500,
         callback: () => { this.jumpBoss(); },
@@ -104,16 +84,12 @@ function create() {
         loop: true,
         callback: () => {
             this.bossIsAttacking = !this.bossIsAttacking;
-
             if(this.bossIsAttacking){
-                console.log("Boss attaque !");
-                // Sa ligne cruciale : on autorise le boss à blesser à nouveau
                 this.bossHasHit = false; 
+                console.log("Boss attaque !");
             } else {
-                console.log("Boss se repose !");
-                if(this.boss) {
-                    this.boss.setVelocityX(this.bossSpeed);
-                }
+                if(this.boss) this.boss.setVelocityX(this.bossSpeed);
+                console.log("Boss se repose");
             }
         }
     });
@@ -123,7 +99,4 @@ function update() {
     movePlayer.call(this);
     moveBoss.call(this);
     this.detectPlayer();
-
-    this.updateBossAttackZone();
-  // ici tout ce qui va se jouer a chaque frame
 }
