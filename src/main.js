@@ -1,12 +1,17 @@
 import { movePlayer } from './player1.js';
 import { createPlayer } from './player1.js';
+
 import { createBoss } from './ennemis/boss.js';
 import { jumpBoss } from './ennemis/boss.js';
 import { moveBoss } from './ennemis/boss.js';
 import { attackBoss } from './ennemis/boss.js';
 import { detectPlayer } from './ennemis/boss.js';
+import { updateBossAttackZone } from './ennemis/boss.js';
+import { takeDamage } from './ennemis/boss.js';
+
 import { createLevel } from './level.js';
-import {setupCamera} from'./camera.js';
+import { setupCamera } from './camera.js';
+
 
 const config = {
     type: Phaser.AUTO,
@@ -36,20 +41,21 @@ function create() {
     const { map, sol } = createLevel.call(this); 
 
     createPlayer.call(this);
-    createBoss.call(this);
-
     if (this.player && sol) {
         this.physics.add.collider(this.player, sol);
     }
 
     setupCamera.call(this, map); 
 
+    createBoss.call(this);
     if (this.boss &&sol){
       this.physics.add.collider(this.boss, sol);
     }
     this.jumpBoss = jumpBoss.bind(this);
     this.attackBoss = attackBoss.bind(this);
     this.detectPlayer = detectPlayer.bind(this);
+    this.updateBossAttackZone = updateBossAttackZone.bind(this);
+    this.takeDamage = takeDamage.bind(this);
 
     //Timer pour les sauts
     this.time.addEvent({
@@ -82,5 +88,6 @@ function update() {
     movePlayer.call(this);
     moveBoss.call(this);
     this.detectPlayer();
+    this.updateBossAttackZone();
   // ici tout ce qui va se jouer a chaque frame
 }

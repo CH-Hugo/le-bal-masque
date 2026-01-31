@@ -9,6 +9,12 @@ export function createBoss() {
     this.bossDetectionRadius = 300; //zone de détection, distance en pixels
 
     this.bossIsAttacking = false;
+
+    //Zone d'attaque
+    this.bossAttackZone = this.add.rectangle(0, 0, 80, 80, 0xff0000, 0);
+    this.physics.add.existing(this.bossAttackZone);
+    this.bossAttackZone.body.setAllowGravity(false);
+    this.bossAttackZone.body.enable = false;
 }
 
 export function moveBoss () {
@@ -52,4 +58,16 @@ export function detectPlayer(){
     if (distance < this.bossDetectionRadius && this.bossIsAttacking){
         this.attackBoss();
     }
+}
+
+export function updateBossAttackZone() {
+    if (!this.boss || !this.bossAttackZone) return;
+    const offset = this.boss.flipX ? -40 : 40;
+
+    this.bossAttackZone.x = this.boss.x + offset;
+    this.bossAttackZone.y = this.boss.y;
+}
+
+export function takeDamage(){
+    console.log("Le joueur prend un coup !")
 }
