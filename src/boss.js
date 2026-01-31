@@ -1,10 +1,13 @@
-export function createboss() {
+export function createBoss() {
     this.boss = this.physics.add.sprite(300, 200, 'boss');
     this.boss.setCollideWorldBounds(true);
-    this.bossSpeed = 150; //rebondit sur les bords
-    this.boss.setVelocityX(this.bossSpeed); //vitesse initiale vers la droite 
+    this.boss.setBounce(1); //rebondit sur les bords
+    this.boss.setVelocityX(150); //vitesse initiale vers la droite 
 }
 
-export function moovboss () {
-    this.boss = this.physics.add.sprite
-}
+export function moovBoss () {
+    if (this.boss.body.blocked.left || this.boss.body.blocked.right){
+        this.bossSpeed *= -this.bossSpeed;
+        this.boss.setVelocityX(this.bossSpeed);
+    }
+    }
