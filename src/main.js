@@ -38,11 +38,7 @@ function create() {
     if (this.player && sol) {
         this.physics.add.collider(this.player, sol);
     }
-    if (this.boss && sol) {
-        this.physics.add.collider(this.boss, sol);
-    }
 
-    createBoss.call(this);
     if (this.boss &&sol){
       this.physics.add.collider(this.boss, sol);
     }
@@ -58,11 +54,28 @@ function create() {
         },
         loop: true
     });
+
+    //timer pour les attaques sur le player
+    this.time.addEvent({
+        delay:3000, //toutes les 3 secondes
+        loop: true,
+        callback: () => {
+          this.bossIsAttacking = !this.bossIsAttacking;
+
+          if(this.bossIsAttacking){
+            console.log("Boss attaque !");
+          } else {
+            console.log("Bosse se repose !");
+            this.boss.setVelocityX(this.bossSpeed); //retour au mouvement normal
+          }
+        }
+      });
+
 }
 
 function update() {
     movePlayer.call(this);
     moveBoss.call(this);
-    this.detectPlayer
+    this.detectPlayer();
   // ici tout ce qui va se jouer a chaque frame
 }

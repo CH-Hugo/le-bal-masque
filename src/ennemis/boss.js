@@ -7,6 +7,8 @@ export function createBoss() {
     this.bossJumpCount = 0;
 
     this.bossDetectionRadius = 300; //zone de détection, distance en pixels
+
+    this.bossIsAttacking = false;
 }
 
 export function moveBoss () {
@@ -28,6 +30,7 @@ export function jumpBoss(){
 
 export function attackBoss(){
     if (!this.player) return; //vérifie que le joueur existe
+    if (!this.bossIsAttacking) return;
 
     const direction = this.player.x < this.boss.x ? -1 : 1; //calcule de la direction vers le joueur
     
@@ -46,7 +49,7 @@ export function detectPlayer(){
         this.boss.x, this.boss.y,
         this.player.x, this.player.y
     );
-    if (distance < this.bossDetectionRadius){
+    if (distance < this.bossDetectionRadius && this.bossIsAttacking){
         this.attackBoss();
     }
 }
