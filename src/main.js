@@ -42,6 +42,7 @@ function create() {
     const sol = map.createLayer('Calque de Tuiles 1', tileset, 0, 0);
 
     if (sol) {
+        sol.setDisplaySize(window.innerWidth, window.innerHeight);
         sol.setCollisionByProperty({ collides: true });
     }
 
@@ -55,5 +56,5 @@ function create() {
 }
 function update() {
     movePlayer.call(this);
-        moveBoss.call(this);
+    moveBoss.call(this);
 }
