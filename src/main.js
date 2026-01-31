@@ -1,5 +1,10 @@
-import { movePlayer, createPlayer } from './player1.js';
-import { createBoss, moveBoss, jumpBoss } from './ennemis/boss.js';
+import { movePlayer } from './player1.js';
+import { createPlayer } from './player1.js';
+import { createBoss } from './ennemis/boss.js';
+import { jumpBoss } from './ennemis/boss.js';
+import { moveBoss } from './ennemis/boss.js';
+import { attackBoss } from './ennemis/boss.js';
+import { detectPlayer } from './ennemis/boss.js';
 import { createLevel } from './level.js';
 import {setupCamera} from'./camera.js';
 
@@ -42,9 +47,22 @@ function create() {
     setupCamera.call(this, map); 
 
     this.jumpBoss = jumpBoss.bind(this);
+    this.attackBoss = attackBoss.bind(this);
+    this.detectPlayer = detectPlayer.bind(this);
+
+    //Timer pour les sauts
+    this.time.addEvent({
+        delay:1500, //toutes les 1.5 secondes
+        callback: () => {
+            this.jumpBoss();
+        },
+        loop: true
+    });
 }
 
 function update() {
     movePlayer.call(this);
     moveBoss.call(this);
+    this.detectPlayer
+  // ici tout ce qui va se jouer a chaque frame
 }
