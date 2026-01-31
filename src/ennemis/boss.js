@@ -16,7 +16,7 @@ export function createBoss() {
     });
 }
 
-export function moovBoss () {
+export function moveBoss () {
     if (this.boss.body.blocked.left || this.boss.body.blocked.right){
         this.bossSpeed *= -1;
         this.boss.setVelocityX(this.bossSpeed);
