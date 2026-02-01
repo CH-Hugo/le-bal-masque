@@ -24,16 +24,29 @@ new Phaser.Game(config);
 
 function preload() {
     this.load.tilemapTiledJSON('maMap', 'assets/map.json'); 
-    this.load.image('mesTuiles', 'assets/fond.jpg'); 
+    
+    // Correction : On utilise le bon nom de fichier avec la MAJUSCULE pour le tileset
+    this.load.image('mesTuiles', 'assets/Sprite-0001-Sheet.png'); 
+    
+    // Vérification : pixels est bien un .jpg dans tes dossiers
     this.load.image('texturePlateforme', 'assets/pixels.jpg');
+    
     this.load.image('coeur', 'assets/coeur.png');
     this.load.spritesheet('perso_marche', 'assets/marche.png', { frameWidth: 30, frameHeight: 32 });
     this.load.spritesheet('perso', 'assets/perso.png', { frameWidth: 24, frameHeight: 30 });
-    this.load.image('boss', 'assets/boss.png'); 
+    this.load.spritesheet('degats', 'assets/degats.png', { frameWidth: 46, frameHeight: 32 });
+    
+    this.load.image('boss', 'assets/boss.png');
+    this.load.audio('sous-sols', 'assets/sous-sols.mp3');
+    
+    // Correction : Majuscule ici aussi pour le décor de fond
+    this.load.image('decor_fond', 'assets/Sprite-0001-Sheet.png');
 }
-
 function create() {
-    const { map, sol } = createLevel.call(this); 
+    const { map, sol } = createLevel.call(this);
+    this.musicSousSol = this.sound.add('sous-sols', { loop: true, volume: 1 });
+    this.musicSousSol.play();
+    this.musiqueActuelle = 'sous-sols';
 
     // --- 1. ANIMATIONS ---
     this.anims.create({
@@ -48,6 +61,13 @@ function create() {
         frames: this.anims.generateFrameNumbers('perso_marche', { start: 0, end: 2 }),
         frameRate: 10,
         repeat: -1
+    }); 
+
+    this.anims.create({
+    key: 'hurt',
+    frames: this.anims.generateFrameNumbers('degats', { start: 0, end: 3 }),
+    frameRate: 12, 
+    repeat: 0 
     });
 
     // --- 2. CRÉATION ---
