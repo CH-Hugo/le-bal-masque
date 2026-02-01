@@ -21,7 +21,7 @@ const config = {
     },
     physics: {
         default: 'arcade',
-        arcade: { gravity: { y: 600 }, debug: false }
+        arcade: { gravity: { y: 600 }, debug: true }
     },
     render: { pixelArt: true },
     scene: { preload, create, update }
@@ -43,6 +43,7 @@ function preload() {
 
     // Anim dégâts
     this.load.spritesheet('degats', 'assets/degats.png', { frameWidth: 46, frameHeight: 32 });
+    this.load.spritesheet('anim_attaque', 'assets/attaque.png', { frameWidth: 38, frameHeight: 30 });
 
     // Boss
     // Remplace l'ancien load.image par celui-ci
@@ -83,6 +84,13 @@ function create() {
         frames: this.anims.generateFrameNumbers('degats', { start: 0, end: 3 }),
         frameRate: 12,
         repeat: 0
+    });
+    
+    this.anims.create({
+    key: 'coup_de_poing',
+    frames: this.anims.generateFrameNumbers('anim_attaque', { start: 0, end: 7 }),
+    frameRate: 16, // Assez rapide pour un coup de poing
+    repeat: 0
     });
 
     // --- CRÉATION ---

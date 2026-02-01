@@ -120,3 +120,22 @@ export function detectPlayer() {
         this.chooseBossAttack();
     }
 }
+
+export function infligerDegatsBoss() {
+    if (this.boss.isDead) return;
+
+    // Flash rouge pour le feedback visuel
+    this.boss.setTint(0xff0000);
+    
+    // Le slime est repoussé par l'impact (Knockback)
+    const pushDir = this.player.x < this.boss.x ? 1 : -1;
+    this.boss.setVelocityX(pushDir * 300);
+    this.boss.setVelocityY(-150);
+
+    this.time.delayedCall(200, () => {
+        this.boss.clearTint();
+        if (!this.bossIsCurrentlyAttacking) {
+            this.boss.setVelocityX(this.bossSpeed);
+        }
+    });
+}
