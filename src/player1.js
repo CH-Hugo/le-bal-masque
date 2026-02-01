@@ -53,43 +53,27 @@ export function movePlayer() {
 
 function lancerAttaque() {
     this.player.isAttacking = true;
-    this.player.setVelocityX(0); 
-
-    // 1. On augmente la largeur de la hitbox (on passe de 19 à 45 pour avoir de l'allonge)
-    this.player.body.setSize(45, 30); 
-
-    // 2. Ajustement précis du décalage (Offset) selon la direction
-    if (this.player.flipX) {
-        // Regarde à GAUCHE : on décale la hitbox vers la gauche du sprite
-        // On met une valeur négative ou réduite pour pousser la boîte vers l'arrière du point d'origine
-        this.player.body.setOffset(-15, 0); 
-    } else {
-        // Regarde à DROITE : on décale la hitbox vers la droite
-        // On met une valeur positive pour pousser la boîte vers l'avant
-        this.player.body.setOffset(10, 0); 
-    }
-
+    this.player.setVelocityX(0);
     this.player.play('coup_de_poing', true);
 
-    // 3. Calcul de la distance pour les dégâts
-    const distance = Phaser.Math.Distance.Between(this.player.x, this.player.y, this.boss.x, this.boss.y);
+    // 1. On crée une zone invisible (hitbox) devant le joueur
+    // 60px de large, 30px de haut
+    const hitBoxX = this.player.flipX ? this.player.x - 60 : this.player.x + 60;
+    const strikeZone = this.add.zone(hitBoxX, this.player.y, 90, 60);
     
-    // Vérification de la direction pour ne pas taper dans le dos
-    const versLaGauche = this.player.flipX && this.boss.x < this.player.x;
-    const versLaDroite = !this.player.flipX && this.boss.x > this.player.x;
+    // 2. On ajoute de la physique temporaire à cette zone
+    this.physics.add.existing(strikeZone);
+    strikeZone.body.setAllowGravity(false);
 
-    if (distance < 85 && (versLaGauche || versLaDroite)) {
+    // 3. On vérifie si cette zone touche le boss
+    if (this.physics.overlap(strikeZone, this.boss)) {
         infligerDegatsBoss.call(this);
     }
 
-    // 4. Retour à la normale
+    // 4. On détruit la zone et on reset l'état à la fin de l'anim
     this.player.once('animationcomplete-coup_de_poing', () => {
+        strikeZone.destroy(); // La zone disparaît
         this.player.isAttacking = false;
-        
-        // On remet la hitbox de base (19x30) et son offset d'origine (4)
-        this.player.body.setSize(19, 30);
-        this.player.body.setOffset(4, 0);
-        
         this.player.play('idle', true);
     });
 }
