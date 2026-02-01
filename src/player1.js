@@ -1,7 +1,7 @@
 export function createPlayer() {
     // --- TES VISUELS ---
     this.player = this.physics.add.sprite(10, 10, 'perso');
-    this.player.setScale(4);
+    this.player.setScale(3.5);
     this.player.x = window.innerWidth / 2;
     this.player.body.setCollideWorldBounds(true);
 
@@ -129,8 +129,8 @@ if (!this.player || !this.player.body || this.player.isDashing || this.player.is
 
 function actualisercoeur() {
     this.hearts.clear(true, true);
-    const marginLeft = 270;
-    const marginTop = 150;
+    const marginLeft = 100;
+    const marginTop = 50;
     const spacing = 40;
     const targetSize = 35;
 
