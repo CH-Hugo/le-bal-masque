@@ -1,6 +1,13 @@
-// Nettoyage des imports : Une seule ligne par fichier suffit !
 import { movePlayer, createPlayer, handlePlayerDamage } from './player1.js';
-import { createBoss, jumpBoss, moveBoss, attackBoss, detectPlayer } from './ennemis/boss.js';
+import { 
+    createBoss, 
+    moveBoss,
+    detectPlayer, 
+    attackCharge,
+    attackJump,
+    attackArea,
+    chooseBossAttack
+} from './ennemis/boss.js';
 import { createLevel } from './level.js';
 import { setupCamera } from './camera.js';
 
@@ -16,7 +23,7 @@ const config = {
         default: 'arcade',
         arcade: { gravity: { y: 600 }, debug: false }
     },
-    render: { pixelArt: true }, 
+    render: { pixelArt: true },
     scene: { preload, create, update }
 };
 
@@ -27,69 +34,53 @@ function preload() {
     this.load.image('mesTuiles', 'assets/fond.jpg'); 
     this.load.image('texturePlateforme', 'assets/pixels.jpg');
     this.load.image('coeur', 'assets/coeur.png');
-    this.load.spritesheet('perso_marche', 'assets/marche.png', { frameWidth: 30, frameHeight: 32 });
+
+    // ✔ CORRECTION MINIMALE : remettre ton vampire
     this.load.spritesheet('perso', 'assets/perso.png', { frameWidth: 24, frameHeight: 30 });
+
+    this.load.spritesheet('perso_marche', 'assets/marche.png', { frameWidth: 30, frameHeight: 32 });
     this.load.image('boss', 'assets/boss.png'); 
 }
 
 function create() {
-    const { map, sol } = createLevel.call(this); 
+    const { map, sol } = createLevel.call(this);
 
-    // --- 1. ANIMATIONS ---
-    this.anims.create({
-        key: 'idle',
-        frames: this.anims.generateFrameNumbers('perso', { start: 0, end: 2 }),
-        frameRate: 6,
-        repeat: -1
-    });
-
-    this.anims.create({
-        key: 'marche', 
-        frames: this.anims.generateFrameNumbers('perso_marche', { start: 0, end: 2 }),
-        frameRate: 10,
-        repeat: -1
-    });
-
-    // --- 2. CRÉATION ---
     createPlayer.call(this);
     createBoss.call(this);
 
-    // --- 3. COLLISIONS ET DÉGÂTS ---
-    if (this.player && sol) {
-        this.physics.add.collider(this.player, sol);
-    }
-    if (this.boss && sol){
-        this.physics.add.collider(this.boss, sol);
-    }
+    if (this.player && sol) this.physics.add.collider(this.player, sol);
+    if (this.boss && sol) this.physics.add.collider(this.boss, sol);
 
-    // Gestion des dégâts
-    this.physics.add.overlap(this.player, this.boss, handlePlayerDamage, null, this);
+    // ✔ CORRECTION MINIMALE : utiliser handlePlayerDamage
+    this.physics.add.overlap(
+        this.player,
+        this.boss,
+        handlePlayerDamage,
+        null,
+        this
+    );
 
-    setupCamera.call(this, map); 
+    setupCamera.call(this, map);
 
-    // Liaison des fonctions
-    this.jumpBoss = jumpBoss.bind(this);
-    this.attackBoss = attackBoss.bind(this);
+    this.attackCharge = attackCharge.bind(this);
+    this.attackJump = attackJump.bind(this);
+    this.attackArea = attackArea.bind(this);
+    this.chooseBossAttack = chooseBossAttack.bind(this);
     this.detectPlayer = detectPlayer.bind(this);
-
-    // --- 4. TIMERS ---
-    this.time.addEvent({
-        delay: 1500,
-        callback: () => { this.jumpBoss(); },
-        loop: true
-    });
 
     this.time.addEvent({
         delay: 3000,
         loop: true,
         callback: () => {
             this.bossIsAttacking = !this.bossIsAttacking;
-            if(this.bossIsAttacking){
-                this.bossHasHit = false; 
-                console.log("Boss attaque !");
+
+            if (this.bossIsAttacking) {
+                console.log("Boss peut attaquer !");
             } else {
-                if(this.boss) this.boss.setVelocityX(this.bossSpeed);
-                console.log("Boss se repose");
+                console.log("Boss se repose !");
+                this.bossIsCurrentlyAttacking = false;
+                this.bossHasHit = false;
+                this.boss.setVelocityX(this.bossSpeed);
             }
         }
     });
