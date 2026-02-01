@@ -57,7 +57,7 @@ function lancerAttaque() {
     this.player.setVelocityX(0);
     this.player.play('coup_de_poing', true);
 
-    // Débloque TOUJOURS le mouvement
+    // Toujours débloquer le mouvement à la fin de l’anim
     this.player.once('animationcomplete', () => {
         this.player.isAttacking = false;
         this.player.play('idle', true);
@@ -70,11 +70,12 @@ function lancerAttaque() {
     this.physics.add.existing(strikeZone);
     strikeZone.body.setAllowGravity(false);
 
+    // Ne toucher le boss que s’il existe encore et n’est pas mort
     if (this.boss && !this.boss.isDead && this.physics.overlap(strikeZone, this.boss)) {
-    infligerDegatsBoss.call(this);
-}
+        infligerDegatsBoss.call(this);
+    }
 
-    // Détruire la hitbox même si l'anim est interrompue
+    // Détruire la hitbox même si l’anim est interrompue
     this.time.delayedCall(150, () => {
         if (strikeZone && strikeZone.destroy) strikeZone.destroy();
     });

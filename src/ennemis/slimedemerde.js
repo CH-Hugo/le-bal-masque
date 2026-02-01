@@ -3,7 +3,7 @@ export function createBoss() {
     this.boss = this.physics.add.sprite(300, 200, 'boss');
     this.boss.setScale(4);
 
-    // Hitbox d’origine (pas agrandie)
+    // Hitbox d’origine
     this.boss.body.setSize(18, 11);
     this.boss.body.setOffset(0, 0);
 
@@ -21,7 +21,7 @@ export function createBoss() {
 
     this.boss.play('slime_move');
 
-    // Mouvement comme avant
+    // Mouvement
     this.bossSpeed = 150;
     this.boss.setVelocityX(this.bossSpeed);
 
@@ -38,7 +38,8 @@ export function createBoss() {
 }
 
 export function moveBoss() {
-    if (!this.boss || this.bossIsCurrentlyAttacking) return;
+    // Si le boss n'existe plus, n'a plus de body ou est mort → on sort
+    if (!this.boss || !this.boss.body || this.boss.isDead || this.bossIsCurrentlyAttacking) return;
 
     // Flip selon direction
     if (this.boss.body.velocity.x > 0) {
@@ -55,7 +56,7 @@ export function moveBoss() {
 }
 
 export function attackCharge() {
-    if (!this.player || !this.boss) return;
+    if (!this.player || !this.boss || !this.boss.body || this.boss.isDead) return;
 
     const direction = this.player.x < this.boss.x ? -1 : 1;
     this.boss.setVelocityX(direction * 500);
@@ -71,7 +72,7 @@ export function attackCharge() {
 }
 
 export function attackJump() {
-    if (!this.boss) return;
+    if (!this.boss || !this.boss.body || this.boss.isDead) return;
 
     this.boss.setVelocityY(-500);
 
@@ -86,6 +87,8 @@ export function attackJump() {
 }
 
 export function attackArea() {
+    if (!this.boss || this.boss.isDead) return;
+
     this.time.delayedCall(600, () => {
         this.bossIsCurrentlyAttacking = false;
         this.bossHasHit = false;
@@ -93,7 +96,7 @@ export function attackArea() {
 }
 
 export function chooseBossAttack() {
-    if (this.bossIsCurrentlyAttacking) return;
+    if (this.bossIsCurrentlyAttacking || !this.boss || this.boss.isDead) return;
 
     this.bossIsCurrentlyAttacking = true;
 
@@ -107,7 +110,7 @@ export function chooseBossAttack() {
 }
 
 export function detectPlayer() {
-    if (!this.player || !this.boss) return;
+    if (!this.player || !this.boss || !this.boss.body || this.boss.isDead) return;
 
     const distance = Phaser.Math.Distance.Between(
         this.boss.x, this.boss.y,
@@ -120,7 +123,7 @@ export function detectPlayer() {
 }
 
 export function infligerDegatsBoss() {
-    if (this.boss.isDead) return;
+    if (!this.boss || this.boss.isDead || !this.boss.body) return;
 
     // Perte de PV
     this.boss.health--;
@@ -156,6 +159,7 @@ export function infligerDegatsBoss() {
             duration: 300,
             onComplete: () => {
                 this.boss.destroy();
+                this.boss = null; // très important pour éviter les accès derrière
                 console.log("Boss vaincu !");
             }
         });
