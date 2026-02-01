@@ -12,6 +12,8 @@ export function createPlayer() {
     this.player.isAttacking = false;
     this.player.isHurt = false;
 
+    this.jumpCount = 0;
+
     this.cursors = this.input.keyboard.createCursorKeys();
     this.keyQ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.Q);
     this.keyD = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.D);
@@ -54,29 +56,27 @@ function lancerAttaque() {
     this.player.isAttacking = true;
     this.player.setVelocityX(0);
     this.player.play('coup_de_poing', true);
+
+    // Débloque TOUJOURS le mouvement
     this.player.once('animationcomplete', () => {
-    this.player.isAttacking = false;
-    });
-    this.player.once('animationcomplete', () => {
-    this.player.isAttacking = false;
+        this.player.isAttacking = false;
+        this.player.play('idle', true);
     });
 
-
-    // Hitbox rapprochée et fiable
+    // Hitbox rapprochée
     const hitBoxX = this.player.flipX ? this.player.x - 40 : this.player.x + 40;
     const strikeZone = this.add.zone(hitBoxX, this.player.y, 70, 50);
 
     this.physics.add.existing(strikeZone);
     strikeZone.body.setAllowGravity(false);
 
-    if (this.physics.overlap(strikeZone, this.boss)) {
-        infligerDegatsBoss.call(this);
-    }
+    if (this.boss && !this.boss.isDead && this.physics.overlap(strikeZone, this.boss)) {
+    infligerDegatsBoss.call(this);
+}
 
-    this.player.once('animationcomplete-coup_de_poing', () => {
-        strikeZone.destroy();
-        this.player.isAttacking = false;
-        this.player.play('idle', true);
+    // Détruire la hitbox même si l'anim est interrompue
+    this.time.delayedCall(150, () => {
+        if (strikeZone && strikeZone.destroy) strikeZone.destroy();
     });
 }
 

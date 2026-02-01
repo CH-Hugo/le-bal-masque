@@ -9,8 +9,10 @@ import {
     chooseBossAttack,
     infligerDegatsBoss
 } from './ennemis/slimedemerde.js';
+
 import { createLevel } from './level.js';
 import { setupCamera } from './camera.js';
+
 
 const config = {
     type: Phaser.AUTO,
