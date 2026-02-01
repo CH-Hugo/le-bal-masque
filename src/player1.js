@@ -1,7 +1,7 @@
 export function createPlayer() {
     // --- TES VISUELS ---
     this.player = this.physics.add.sprite(10, 10, 'perso');
-    this.player.setScale(2);
+    this.player.setScale(4);
     this.player.x = window.innerWidth / 2;
     this.player.body.setCollideWorldBounds(true);
 
@@ -32,10 +32,9 @@ export function createPlayer() {
 
 // --- SA FONCTION DE DÉGÂTS (Fusionnée) ---
 export function handlePlayerDamage(player, boss) {
-    // On ne prend des dégâts que si le boss attaque et qu'on n'est pas déjà touché/invulnérable
     if (!this.bossIsAttacking || this.bossHasHit || player.isInvulnerable) return;
 
-    this.bossHasHit = true; // Bloque les dégâts multiples en une attaque
+    this.bossHasHit = true;
     player.health -= 1;
     actualisercoeur.call(this);
 
@@ -44,22 +43,30 @@ export function handlePlayerDamage(player, boss) {
         return;
     }
 
-    // Effet d'invulnérabilité (clignotement alpha)
+    // On active l'état "Hurt"
+    player.isHurt = true; 
     player.isInvulnerable = true;
-    player.setAlpha(0.5);
+    
+    // On joue l'anim UNE SEULE FOIS
+    player.play('hurt', true); 
+    
+    // Knockback léger (on évite de trop grosses forces)
+    const knockbackDir = (player.x < boss.x) ? -150 : 150;
+    player.setVelocity(knockbackDir, -100);
 
-    this.time.addEvent({
-        delay: 1000,
-        callback: () => {
-            player.isInvulnerable = false;
-            player.setAlpha(1);
-        },
-        callbackScope: this
+    // On redonne les contrôles très vite (300ms)
+    this.time.delayedCall(300, () => {
+        player.isHurt = false;
+    });
+
+    // Fin d'invulnérabilité
+    this.time.delayedCall(1000, () => {
+        player.isInvulnerable = false;
     });
 }
 
 export function movePlayer() {
-    if (!this.player || !this.player.body || this.player.isDashing) return;
+if (!this.player || !this.player.body || this.player.isDashing || this.player.isHurt) return;
 
     let currentSpeed = this.keyD.isDown ? this.sprintSpeed : this.walkSpeed;
 
@@ -122,8 +129,8 @@ export function movePlayer() {
 
 function actualisercoeur() {
     this.hearts.clear(true, true);
-    const marginLeft = 150;
-    const marginTop = 90;
+    const marginLeft = 270;
+    const marginTop = 150;
     const spacing = 40;
     const targetSize = 35;
 
