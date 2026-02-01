@@ -45,7 +45,8 @@ function preload() {
     this.load.spritesheet('degats', 'assets/degats.png', { frameWidth: 46, frameHeight: 32 });
 
     // Boss
-    this.load.image('boss', 'assets/boss.png');
+    // Remplace l'ancien load.image par celui-ci
+    this.load.spritesheet('boss', 'assets/slime.png', { frameWidth: 18, frameHeight: 11 });
 
     // Musique
     this.load.audio('sous-sols', 'assets/sous-sols.mp3');

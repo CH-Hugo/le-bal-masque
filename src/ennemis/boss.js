@@ -1,19 +1,48 @@
 export function createBoss() {
+    // 1. Création du sprite
     this.boss = this.physics.add.sprite(300, 200, 'boss');
+    
+    // 2. TAILLE : On fixe une seule fois à 4 (fini le conflit avec le scale 2 !)
+    this.boss.setScale(4); 
+    
+    // 3. PHYSIQUE : On ajuste la hitbox sur la taille de base (18x11)
+    // Phaser l'adaptera automatiquement au scale de 4
+    this.boss.body.setSize(18, 11); 
     this.boss.setCollideWorldBounds(true);
+
+    // 4. ANIMATION : On vérifie si elle existe déjà avant de la créer
+    if (!this.anims.exists('slime_move')) {
+        this.anims.create({
+            key: 'slime_move',
+            frames: this.anims.generateFrameNumbers('boss', { start: 0, end: 3 }),
+            frameRate: 8,
+            repeat: -1
+        });
+    }
+
+    // 5. LANCEMENT
+    this.boss.play('slime_move');
+
+    // 6. VARIABLES D'ÉTAT
     this.bossSpeed = 150;
     this.boss.setVelocityX(this.bossSpeed);
 
     this.bossJumpCount = 0;
     this.bossDetectionRadius = 300;
-
-    this.bossIsAttacking = false;
+    this.bossIsAttacking = true; 
     this.bossIsCurrentlyAttacking = false;
-    this.bossHasHit = false; // IMPORTANT pour handlePlayerDamage
+    this.bossHasHit = false;
 }
 
 export function moveBoss() {
     if (!this.boss || this.bossIsCurrentlyAttacking) return;
+
+    // Gestion du flip (tourner le regard du slime vers sa direction)
+    if (this.boss.body.velocity.x > 0) {
+        this.boss.setFlipX(false);
+    } else {
+        this.boss.setFlipX(true);
+    }
 
     if (this.boss.body.blocked.left || this.boss.body.blocked.right) {
         this.bossSpeed *= -1;
