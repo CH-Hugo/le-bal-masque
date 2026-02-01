@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import { movePlayer, createPlayer, handlePlayerDamage } from './player1.js';
 import { 
     createBoss, 
@@ -9,8 +10,14 @@ import {
     chooseBossAttack,
     infligerDegatsBoss
 } from './ennemis/slimedemerde.js';
+=======
+// Nettoyage des imports : Une seule ligne par fichier suffit !
+import { movePlayer, createPlayer, handlePlayerDamage, gameOver, actualisercoeur } from './player1.js';
+import { createBoss, jumpBoss, moveBoss, attackBoss, detectPlayer } from './ennemis/boss.js';
+>>>>>>> 31bcc16 (temporaire)
 import { createLevel } from './level.js';
 import { setupCamera } from './camera.js';
+
 
 const config = {
     type: Phaser.AUTO,
@@ -22,7 +29,11 @@ const config = {
     },
     physics: {
         default: 'arcade',
+<<<<<<< HEAD
         arcade: { gravity: { y: 600 }, debug: true }
+=======
+        arcade: { gravity: { y: 1000 }, debug: false }
+>>>>>>> 31bcc16 (temporaire)
     },
     render: { pixelArt: true },
     scene: { preload, create, update }
@@ -31,13 +42,19 @@ const config = {
 new Phaser.Game(config);
 
 function preload() {
+<<<<<<< HEAD
     this.load.tilemapTiledJSON('maMap', 'assets/map.json'); 
     
     this.load.image('mesTuiles', 'assets/Sprite-0001-Sheet.png'); 
+=======
+    this.load.tilemapTiledJSON('maMap', 'assets/map.json');
+    this.load.image('mesTuiles', 'assets/fond.jpg');
+>>>>>>> 31bcc16 (temporaire)
     this.load.image('texturePlateforme', 'assets/pixels.jpg');
     this.load.image('coeur', 'assets/coeur.png');
 
     this.load.spritesheet('perso', 'assets/perso.png', { frameWidth: 24, frameHeight: 30 });
+<<<<<<< HEAD
     this.load.spritesheet('perso_marche', 'assets/marche.png', { frameWidth: 30, frameHeight: 32 });
 
     this.load.spritesheet('degats', 'assets/degats.png', { frameWidth: 46, frameHeight: 32 });
@@ -48,6 +65,9 @@ function preload() {
     this.load.audio('sous-sols', 'assets/sous-sols.mp3');
 
     this.load.image('decor_fond', 'assets/Sprite-0001-Sheet.png');
+=======
+    this.load.image('boss', 'assets/boss.png');
+>>>>>>> 31bcc16 (temporaire)
 }
 
 function create() {
@@ -65,7 +85,7 @@ function create() {
     });
 
     this.anims.create({
-        key: 'marche', 
+        key: 'marche',
         frames: this.anims.generateFrameNumbers('perso_marche', { start: 0, end: 2 }),
         frameRate: 10,
         repeat: -1
@@ -89,8 +109,20 @@ function create() {
     createPlayer.call(this);
     createBoss.call(this);
 
+<<<<<<< HEAD
     if (this.player && sol) this.physics.add.collider(this.player, sol);
     if (this.boss && sol) this.physics.add.collider(this.boss, sol);
+=======
+
+
+    // --- 3. COLLISIONS ET DÉGÂTS ---
+    if (this.player && sol) {
+        this.physics.add.collider(this.player, sol);
+    }
+    if (this.boss && sol){
+        this.physics.add.collider(this.boss, sol);
+    }
+>>>>>>> 31bcc16 (temporaire)
 
     // Dégâts du boss → joueur
     this.physics.add.overlap(
@@ -101,8 +133,12 @@ function create() {
         this
     );
 
+<<<<<<< HEAD
     // Cœurs du boss (à droite)
     this.bossHearts = this.add.group();
+=======
+    setupCamera.call(this, map);
+>>>>>>> 31bcc16 (temporaire)
 
     this.actualiserCoeursBoss = () => {
         this.bossHearts.clear(true, true);
@@ -136,11 +172,20 @@ function create() {
         loop: true,
         callback: () => {
             this.bossIsAttacking = !this.bossIsAttacking;
+<<<<<<< HEAD
 
             if (!this.bossIsAttacking) {
                 this.bossIsCurrentlyAttacking = false;
                 this.bossHasHit = false;
                 this.boss.setVelocityX(this.bossSpeed);
+=======
+            if(this.bossIsAttacking){
+                this.bossHasHit = false;
+                console.log("Boss attaque !");
+            } else {
+                if(this.boss) this.boss.setVelocityX(this.bossSpeed);
+                console.log("Boss se repose");
+>>>>>>> 31bcc16 (temporaire)
             }
         }
     });
