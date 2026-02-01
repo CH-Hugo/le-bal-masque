@@ -6,7 +6,7 @@ export function createPlayer() {
     this.player.body.setCollideWorldBounds(true);
 
     // Tes réglages de hitbox précis
-    this.player.body.setSize(16, 30); 
+    this.player.body.setSize(19, 30); 
     this.player.body.setOffset(4, 0); 
 
     this.player.play('idle');
